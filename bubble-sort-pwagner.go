@@ -1,6 +1,7 @@
 // percipio/Coursera "golang-functions-methods"
 // Module 1 Activity: Bubble Sort Program
 // done Paul.Wagner@telekom.de 2020/06/07
+// could be optimized to take advantage of the implicit call-by-reference for slices
 package main
 
 import (
@@ -11,7 +12,7 @@ import (
 // reads from stdin (therefore needs no argument) and returns a slice of integers (that can be empty!).
 func getInput() []int {
 	mySlice := make([]int, 0) // start with an empty slice
-	fmt.Println("Please enter a quantity of integer numbers line by line. 'quit' or anything other than numbers will finish the process.")
+	fmt.Println("Please enter a quantity of integer numbers line by line. Typing 'quit' or anything other than numbers will finish the process.")
 
 	var myNum int
 	for { // infinite loop - until user decides to finish
@@ -36,7 +37,7 @@ func mySwap(a, b int) (int, int) {
 // takes a slice of int as argument and returns a sorted slice (ascending order)
 func mySort(inSlice []int) { //} []int {
 	if len(inSlice) < 2 { // if the slice is empty or only 1 number return immediately
-		return // inSlice
+		return inSlice
 	}
 	for i := 1; i < len(inSlice); i++ { // loop n times : n is one less than the number of elements
 		for j := 0; j < len(inSlice)-i; j++ { // iterate through the first (len-n) elements : the upper elements being already sorted
@@ -45,19 +46,17 @@ func mySort(inSlice []int) { //} []int {
 			}
 		}
 	}
-	// return inSlice // return a sorted slice
+	return inSlice // return a sorted slice
 }
 
 // main() gets a slice of ints from the user, sorts the slice and prints it.
 func main() {
-	aSlice := getInput()
-	fmt.Println("This is the Slice you just gave me :", aSlice)
+	inSlice := getInput()
+	fmt.Println("This is the Slice you just gave me :", inSlice)
 
 	fmt.Println("Trying to Bubblesort this Slice.")
-	// bSlice := mySort(aSlice)
-	mySort(aSlice)
+	outSlice := mySort(inSlice)
 
-	// fmt.Println("Resulting in :", bSlice)
-	fmt.Println("Resulting in :", aSlice)
+	fmt.Println("Resulting in :", outSlice)
 	fmt.Println("Finished. Exiting.")
 }
