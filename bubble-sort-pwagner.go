@@ -1,18 +1,18 @@
 // percipio/Coursera "golang-functions-methods"
 // Module 1 Activity: Bubble Sort Program
 // done Paul.Wagner@telekom.de 2020/06/07
-// could be optimized to take advantage of the implicit call-by-reference for slices
+// takes advantage of the implicit call-by-reference for slices
 package main
 
 import (
 	"fmt"
 )
 
-// getInput() Allows the user to enter a slice of ints of an arbitrary length.
+// getInput() Allows the user to enter a slice of ints of an arbitrary length, well up to 10 max.
 // reads from stdin (therefore needs no argument) and returns a slice of integers (that can be empty!).
 func getInput() []int {
 	mySlice := make([]int, 0) // start with an empty slice
-	fmt.Println("Please enter a quantity of integer numbers line by line. Typing 'quit' or anything other than numbers will finish the process.")
+	fmt.Println("Please enter up to 10 integer numbers line by line. Typing 'quit' or anything other than numbers will finish the process.")
 
 	var myNum int
 	for { // infinite loop - until user decides to finish
@@ -23,30 +23,33 @@ func getInput() []int {
 			return mySlice                                               // exiting the for loop and returning the result
 		}
 		mySlice = append(mySlice, myNum)
-	}
-	// return mySlice // no need for "return" here - the for loop never ends here - !
 
+		if len(mySlice) >= 10 {
+			return mySlice // Re-reading the assignment mentions a limit of 10 ints ...
+		}
+	}
 }
 
-// mySwap returns its two arguments just in reverse order.
-func mySwap(a, b int) (int, int) {
-	return b, a
+// mySwap takes a slice and an index value as arguments, it then exchanges the values of the element[idx] and [idx+1].
+func mySwap(slice []int, idx int) {
+	slice[idx], slice[idx+1] = slice[idx+1], slice[idx]
+	return
 }
 
 // mySort is a simple Bubblesort, no optimizations.
-// takes a slice of int as argument and returns a sorted slice (ascending order)
-func mySort(inSlice []int) { //} []int {
+// takes a slice of int as argument and sorts it in-place (ascending order)
+func mySort(inSlice []int) {
 	if len(inSlice) < 2 { // if the slice is empty or only 1 number return immediately
-		return inSlice
+		return
 	}
 	for i := 1; i < len(inSlice); i++ { // loop n times : n is one less than the number of elements
 		for j := 0; j < len(inSlice)-i; j++ { // iterate through the first (len-n) elements : the upper elements being already sorted
 			if inSlice[j] > inSlice[j+1] { // if the element is bigger than its right neighbour then swap them
-				inSlice[j], inSlice[j+1] = mySwap(inSlice[j], inSlice[j+1])
+				mySwap(inSlice, j)
 			}
 		}
 	}
-	return inSlice // return a sorted slice
+	return
 }
 
 // main() gets a slice of ints from the user, sorts the slice and prints it.
@@ -55,8 +58,8 @@ func main() {
 	fmt.Println("This is the Slice you just gave me :", inSlice)
 
 	fmt.Println("Trying to Bubblesort this Slice.")
-	outSlice := mySort(inSlice)
+	mySort(inSlice)
 
-	fmt.Println("Resulting in :", outSlice)
+	fmt.Println("Resulting in :", inSlice)
 	fmt.Println("Finished. Exiting.")
 }
